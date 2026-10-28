@@ -1,0 +1,8 @@
+__pycache__/
+.venv/
+logs/
+*.log
+data/convs/*.partial.json
+data/convs/*.partial.json.tmp
+data/convs/*_acts.npz
+.DS_Store

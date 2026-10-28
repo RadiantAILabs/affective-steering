@@ -1,0 +1,482 @@
+[
+ {
+  "trait": 90,
+  "coherence": 62
+ },
+ {
+  "trait": 96,
+  "coherence": 62
+ },
+ {
+  "trait": 96,
+  "coherence": 70
+ },
+ {
+  "trait": 95,
+  "coherence": 62
+ },
+ {
+  "trait": 95,
+  "coherence": 90
+ },
+ {
+  "trait": 82,
+  "coherence": 70
+ },
+ {
+  "trait": 2,
+  "coherence": 95
+ },
+ {
+  "trait": 96,
+  "coherence": 70
+ },
+ {
+  "trait": 96,
+  "coherence": 70
+ },
+ {
+  "trait": 2,
+  "coherence": 60
+ },
+ {
+  "trait": 97,
+  "coherence": 62
+ },
+ {
+  "trait": 96,
+  "coherence": 55
+ },
+ {
+  "trait": 88,
+  "coherence": 62
+ },
+ {
+  "trait": 96,
+  "coherence": 55
+ },
+ {
+  "trait": 92,
+  "coherence": 55
+ },
+ {
+  "trait": 92,
+  "coherence": 85
+ },
+ {
+  "trait": 88,
+  "coherence": 70
+ },
+ {
+  "trait": 42,
+  "coherence": 68
+ },
+ {
+  "trait": 95,
+  "coherence": 80
+ },
+ {
+  "trait": 2,
+  "coherence": 70
+ },
+ {
+  "trait": 25,
+  "coherence": 80
+ },
+ {
+  "trait": 4,
+  "coherence": 90
+ },
+ {
+  "trait": 8,
+  "coherence": 62
+ },
+ {
+  "trait": 4,
+  "coherence": 55
+ },
+ {
+  "trait": 8,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 55
+ },
+ {
+  "trait": 3,
+  "coherence": 70
+ },
+ {
+  "trait": 55,
+  "coherence": 70
+ },
+ {
+  "trait": 80,
+  "coherence": 55
+ },
+ {
+  "trait": 3,
+  "coherence": 62
+ },
+ {
+  "trait": 62,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 70
+ },
+ {
+  "trait": 3,
+  "coherence": 70
+ },
+ {
+  "trait": 6,
+  "coherence": 70
+ },
+ {
+  "trait": 22,
+  "coherence": 70
+ },
+ {
+  "trait": 6,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 55
+ },
+ {
+  "trait": 3,
+  "coherence": 70
+ },
+ {
+  "trait": 2,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 70
+ },
+ {
+  "trait": 100,
+  "coherence": 95
+ },
+ {
+  "trait": 97,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 70
+ },
+ {
+  "trait": 98,
+  "coherence": 70
+ },
+ {
+  "trait": 99,
+  "coherence": 95
+ },
+ {
+  "trait": 99,
+  "coherence": 85
+ },
+ {
+  "trait": 97,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 70
+ },
+ {
+  "trait": 98,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 95
+ },
+ {
+  "trait": 96,
+  "coherence": 90
+ },
+ {
+  "trait": 98,
+  "coherence": 70
+ },
+ {
+  "trait": 98,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 70
+ },
+ {
+  "trait": 96,
+  "coherence": 92
+ },
+ {
+  "trait": 99,
+  "coherence": 85
+ },
+ {
+  "trait": 98,
+  "coherence": 85
+ },
+ {
+  "trait": 22,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 70
+ },
+ {
+  "trait": 72,
+  "coherence": 55
+ },
+ {
+  "trait": 15,
+  "coherence": 70
+ },
+ {
+  "trait": 12,
+  "coherence": 70
+ },
+ {
+  "trait": 22,
+  "coherence": 70
+ },
+ {
+  "trait": 33,
+  "coherence": 70
+ },
+ {
+  "trait": 12,
+  "coherence": 70
+ },
+ {
+  "trait": 12,
+  "coherence": 85
+ },
+ {
+  "trait": 12,
+  "coherence": 85
+ },
+ {
+  "trait": 22,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 70
+ },
+ {
+  "trait": 22,
+  "coherence": 70
+ },
+ {
+  "trait": 18,
+  "coherence": 70
+ },
+ {
+  "trait": 22,
+  "coherence": 70
+ },
+ {
+  "trait": 62,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 70
+ },
+ {
+  "trait": 98,
+  "coherence": 62
+ },
+ {
+  "trait": 97,
+  "coherence": 80
+ },
+ {
+  "trait": 97,
+  "coherence": 62
+ },
+ {
+  "trait": 98,
+  "coherence": 62
+ },
+ {
+  "trait": 97,
+  "coherence": 60
+ },
+ {
+  "trait": 92,
+  "coherence": 62
+ },
+ {
+  "trait": 97,
+  "coherence": 62
+ },
+ {
+  "trait": 97,
+  "coherence": 80
+ },
+ {
+  "trait": 97,
+  "coherence": 85
+ },
+ {
+  "trait": 96,
+  "coherence": 62
+ },
+ {
+  "trait": 98,
+  "coherence": 85
+ },
+ {
+  "trait": 97,
+  "coherence": 70
+ },
+ {
+  "trait": 93,
+  "coherence": 62
+ },
+ {
+  "trait": 97,
+  "coherence": 62
+ },
+ {
+  "trait": 97,
+  "coherence": 62
+ },
+ {
+  "trait": 97,
+  "coherence": 72
+ },
+ {
+  "trait": 98,
+  "coherence": 70
+ },
+ {
+  "trait": 96,
+  "coherence": 62
+ },
+ {
+  "trait": 98,
+  "coherence": 80
+ },
+ {
+  "trait": 96,
+  "coherence": 62
+ },
+ {
+  "trait": 22,
+  "coherence": 85
+ },
+ {
+  "trait": 3,
+  "coherence": 70
+ },
+ {
+  "trait": 18,
+  "coherence": 70
+ },
+ {
+  "trait": 12,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 72
+ },
+ {
+  "trait": 8,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 60
+ },
+ {
+  "trait": 3,
+  "coherence": 85
+ },
+ {
+  "trait": 12,
+  "coherence": 70
+ },
+ {
+  "trait": 12,
+  "coherence": 62
+ },
+ {
+  "trait": 12,
+  "coherence": 70
+ },
+ {
+  "trait": 22,
+  "coherence": 70
+ },
+ {
+  "trait": 4,
+  "coherence": 70
+ },
+ {
+  "trait": 30,
+  "coherence": 72
+ },
+ {
+  "trait": 8,
+  "coherence": 70
+ },
+ {
+  "trait": 22,
+  "coherence": 80
+ }
+]
