@@ -1,5 +1,5 @@
-"""Qwen3.5-4B (8-bit MLX) as the target: batched chat generation with an optional steering vector, and per-layer
-residual readouts over a transcript."""
+"""Qwen3.5-4B (8-bit MLX) as the target: batched chat generation with optional steering (at one layer or several),
+per-layer residual readouts over a transcript, and the pre-reply state used to gate steering per turn."""
 import mlx.core as mx
 import mlx.nn as nn
 import numpy as np
@@ -33,16 +33,39 @@ class Target:
         self.steers = {}
 
     def set_steering(self, layer=None, vec=None):
-        """set_steering(layer, vec) adds vec to the residual stream leaving `layer`; set_steering() turns it off."""
+        """set_steering(layer, vec) adds vec to the residual stream leaving `layer`; set_steering({layer: vec, ...})
+        does the same at several layers at once (multi-layer steering); set_steering() turns all steering off."""
         for st in self.steers.values():
             st.vec = None
         if layer is None:
             return
-        layer = int(layer)
-        if layer not in self.steers:
-            self.steers[layer] = Steer(self.layers[layer].mlp)
-            self.layers[layer].mlp = self.steers[layer]
-        self.steers[layer].vec = mx.array(np.asarray(vec, np.float32))
+        pushes = layer if isinstance(layer, dict) else {layer: vec}
+        for l, v in pushes.items():
+            l = int(l)
+            if l not in self.steers:
+                self.steers[l] = Steer(self.layers[l].mlp)
+                self.layers[l].mlp = self.steers[l]
+            self.steers[l].vec = mx.array(np.asarray(v, np.float32))
+
+    def pre_state(self, conversations, layer):
+        """Residual stream after `layer` at the last prompt token, as the model sees it right before it generates the
+        next reply (generation prompt included, steering off). Returns [len(conversations), H]."""
+        saved = {l: st.vec for l, st in self.steers.items()}
+        for st in self.steers.values():
+            st.vec = None
+        out = []
+        try:
+            for m in conversations:
+                h = self.model.language_model.model.embed_tokens(mx.array([self.ids(m)]))
+                mask = create_attention_mask(h, None)
+                for lyr in self.layers[: layer + 1]:
+                    h = lyr(h, mask=None if lyr.is_linear else mask, cache=None)
+                out.append(np.array(h[0, -1].astype(mx.float32)))
+                mx.clear_cache()
+        finally:
+            for l, v in saved.items():
+                self.steers[l].vec = v
+        return np.stack(out)
 
     def ids(self, messages, add_generation_prompt=True):
         r = self.tok.apply_chat_template(messages, add_generation_prompt=add_generation_prompt,
