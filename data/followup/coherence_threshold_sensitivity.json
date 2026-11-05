@@ -1,0 +1,68 @@
+{
+ "ml_away_raw@60": {
+  "n_turns": 66,
+  "diff": [
+   -6.3,
+   -17.9,
+   8.0
+  ],
+  "improve": 8,
+  "worse": 2,
+  "p": 0.109
+ },
+ "ml_away_raw@70": {
+  "n_turns": 57,
+  "diff": [
+   -3.9,
+   -14.2,
+   9.0
+  ],
+  "improve": 8,
+  "worse": 2,
+  "p": 0.109
+ },
+ "ml_away_raw@80": {
+  "n_turns": 47,
+  "diff": [
+   -0.9,
+   -11.8,
+   12.8
+  ],
+  "improve": 5,
+  "worse": 4,
+  "p": 1.0
+ },
+ "sl_matched@60": {
+  "n_turns": 59,
+  "diff": [
+   -14.7,
+   -23.2,
+   -6.8
+  ],
+  "improve": 9,
+  "worse": 1,
+  "p": 0.021
+ },
+ "sl_matched@70": {
+  "n_turns": 51,
+  "diff": [
+   -11.8,
+   -19.5,
+   -4.9
+  ],
+  "improve": 9,
+  "worse": 1,
+  "p": 0.021
+ },
+ "sl_matched@80": {
+  "n_turns": 28,
+  "diff": [
+   -1.4,
+   -8.8,
+   7.1
+  ],
+  "improve": 4,
+  "worse": 2,
+  "p": 0.688
+ }
+}

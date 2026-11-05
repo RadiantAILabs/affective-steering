@@ -11,6 +11,12 @@ is not part of this repository (see README); pass yours with --scenarios-dir, --
     uv run python converse.py --condition cap_minus --trait capitulation --coef -0.4
     uv run python converse.py --condition random --random-like capitulation --coef -0.4
     uv run python converse.py --condition haiku --api-target haiku
+
+Follow-up: a push spread over several layers (--ml, an array in data/followup/ml_vectors.npz, with --coef as the total
+budget), optionally gated per turn on the pre-reply state (--gate). See run_followup.sh for the exact runs.
+
+    uv run python converse.py --condition ml_away_raw --ml capitulation_raw --coef -0.75
+    uv run python converse.py --condition dyn_gate_raw --ml capitulation_raw --coef -0.75 --gate data/followup/gate.json
 """
 import argparse
 import glob
@@ -66,6 +72,25 @@ def steering_vector(a):
     return layer, (a.coef * rep[trait]["resid_norm"][k] * v).astype(np.float32)
 
 
+def ml_pushes(name, coef):
+    """{layer: vec}: the unit direction per layer (from followup_vectors.py) scaled to coef x that layer's median
+    residual norm, divided by the number of layers so that coef is a total budget spread across them."""
+    z = np.load("data/followup/ml_vectors.npz")
+    layers, norms, U = list(z["layers"]), z["resid_norm"], z[name]
+    return {int(l): (coef * norms[i] * U[i] / len(layers)).astype(np.float32) for i, l in enumerate(layers)}
+
+
+def gate_coefs(tgt, convs, g, coef):
+    """Per-conversation push size from the pre-reply readout on the gate direction: 0 at or below the baseline median,
+    the full dose at or above the 90th percentile, then snapped to 3 buckets (0 / half / full) so each bucket can be
+    batched with one broadcast vector (batch_generate may reorder rows, so per-row vectors are unsafe)."""
+    u = np.asarray(g["unit"], np.float32)
+    scores = tgt.pre_state(convs, g["layer"]) @ u
+    frac = np.clip((scores - g["q50"]) / (g["q90"] - g["q50"]), 0, 1)
+    bucket = np.where(frac < 0.25, 0.0, np.where(frac < 0.75, 0.5, 1.0))
+    return scores, frac, bucket * coef
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--condition", required=True)
@@ -82,7 +107,13 @@ def main():
     ap.add_argument("--tester-prompt", default=os.path.join(EXAMPLES, "tester_prompt.example.md"),
                     help="tester system prompt with {{CHARACTER}} and {{GOAL}} placeholders")
     ap.add_argument("--agent-prompt", default=os.path.join(EXAMPLES, "agent_prompt.example.md"))
+    ap.add_argument("--ml", help="multi-layer push along this array of data/followup/ml_vectors.npz "
+                                 "(cap_clean, capsyc_clean, capitulation_raw, random, ...); --coef is the total budget")
+    ap.add_argument("--gate", help="json with layer/unit/q50/q90 (data/followup/gate.json): gate the --ml push per turn "
+                                   "on the pre-reply readout")
     a = ap.parse_args()
+    if a.gate and not a.ml:
+        ap.error("--gate needs --ml")
 
     agent_sys = open(a.agent_prompt).read().strip()
     tester_tpl = open(a.tester_prompt).read()
@@ -96,8 +127,14 @@ def main():
     if not a.api_target:
         from target import Target
         tgt = Target()
-        layer, vec = steering_vector(a)
-        tgt.set_steering(layer, vec)
+        if a.ml:
+            layer = sorted(ml_pushes(a.ml, a.coef))
+            if not a.gate:
+                tgt.set_steering(ml_pushes(a.ml, a.coef))
+        else:
+            layer, vec = steering_vector(a)
+            tgt.set_steering(layer, vec)
+    gate = json.load(open(a.gate)) if a.gate else None
     api_model = {"haiku": llm.HAIKU, "sonnet": llm.SONNET, "opus": llm.OPUS}.get(a.api_target)
 
     ckpt = f"data/convs/{a.condition}.partial.json"
@@ -113,7 +150,20 @@ def main():
         user_msgs = llm.pmap(tester_turn, states, workers=len(states))
         for st, m in zip(states, user_msgs):
             st["target"].append({"role": "user", "content": m})
-        if tgt:
+        if tgt and gate:
+            convs = [st["target"] for st in states]
+            scores, frac, coefs = gate_coefs(tgt, convs, gate, a.coef)
+            replies = [None] * len(states)
+            for c in sorted(set(coefs.tolist())):
+                idx = [i for i in range(len(states)) if coefs[i] == c]
+                tgt.set_steering(ml_pushes(a.ml, c)) if c else tgt.set_steering()
+                for i, r in zip(idx, tgt.generate([convs[i] for i in idx], max_tokens=a.max_tokens)):
+                    replies[i] = r
+            tgt.set_steering()
+            for st, sc, fr, c in zip(states, scores, frac, coefs):
+                st.setdefault("gate", []).append({"turn": turn + 1, "score": float(sc), "frac": float(fr), "coef": float(c)})
+            print(f"[{a.condition}] gate coefs {coefs.tolist()}", flush=True)
+        elif tgt:
             replies = tgt.generate([st["target"] for st in states], max_tokens=a.max_tokens)
         else:
             replies = llm.pmap(lambda st: llm.chat(api_model, st["target"][1:], system=agent_sys, max_tokens=4000).strip(),
@@ -126,8 +176,8 @@ def main():
         print(f"[{a.condition}] turn {turn + 1}/{a.turns} done, {time.time() - t0:.0f}s", flush=True)
 
     out = {"condition": a.condition, "args": vars(a), "layer": layer, "coef": a.coef,
-           "conversations": [{"scenario": st["scenario"], "messages": st["target"], "tester_notes": st["notes"]}
-                             for st in states]}
+           "conversations": [{"scenario": st["scenario"], "messages": st["target"], "tester_notes": st["notes"],
+                              **({"gate": st["gate"]} if "gate" in st else {})} for st in states]}
     json.dump(out, open(f"data/convs/{a.condition}.json", "w"), indent=1)
     if tgt:  # readout with the same steering the model ran under
         pre, resp = zip(*[tgt.readout(st["target"]) for st in states])

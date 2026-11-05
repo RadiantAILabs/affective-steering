@@ -5,7 +5,7 @@
 
 Only question ids, markers and the healthy answer per id are needed here, never the question texts. Activations are
 read from data/convs/{cond}_acts.npz when present (what converse.py writes) and otherwise from the steering-layer slice
-shipped in data/convs/acts_L20.npz.
+shipped in data/convs/acts_L20.npz (data/followup/acts_L20.npz for the follow-up's conditions).
 """
 import argparse
 import json
@@ -44,11 +44,11 @@ def acts_at(cond, layer):
         a = np.load(p)
         li = list(np.load("data/persona_vectors.npz")["layers"]).index(layer)
         return {kind: a[kind][:, :, li] for kind in ("pre", "resp")}
-    s = "data/convs/acts_L20.npz"
-    if os.path.exists(s):
-        z = np.load(s)
-        if f"{cond}_resp" in z and int(z["layer"]) == layer:
-            return {kind: z[f"{cond}_{kind}"] for kind in ("pre", "resp")}
+    for s in ("data/convs/acts_L20.npz", "data/followup/acts_L20.npz"):  # the original study's, then the follow-up's
+        if os.path.exists(s):
+            z = np.load(s)
+            if f"{cond}_resp" in z and int(z["layer"]) == layer:
+                return {kind: z[f"{cond}_{kind}"] for kind in ("pre", "resp")}
     return None
 
 
